@@ -66,7 +66,7 @@ It works offline. Just download the repo and open the file.
 
 ## ⚠️ Disclaimer: this is vibe coded
 
-I made this with an Claude (Fable 5.2). The USB protocol was worked out by reading the original program's code, without ever running it, then tested on my own mouse. So far the status readout and polling rate are confirmed working on real hardware. The other settings are built from that reverse engineering but haven't all been checked on the mouse yet. If something goes weird, **Advanced → Restore factory defaults** is there for you.
+I made this using Claude (Fable 5.2). The USB protocol was worked out by reading the original program's code, without ever running it, then tested on my own mouse. So far the status readout and polling rate are confirmed working on real hardware. The other settings are built from that reverse engineering but haven't all been checked on the mouse yet. If something goes weird, **Advanced → Restore factory defaults** is there for you.
 
 Use it at your own risk. It's still less risky than the malware.
 
