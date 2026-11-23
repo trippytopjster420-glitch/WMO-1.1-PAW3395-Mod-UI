@@ -8,7 +8,7 @@ It's a single HTML file. No installer, no `.exe`, and nothing phones home. You c
 
 ![The Pointer tab](screenshots/pointer-tab.png)
 
-## So Nostalgic (I was born after 1999)
+## So Nostalgic!! (I was born after 1999)
 
 A classic mouse deserves a classic control panel. The whole thing is drawn as a Windows 95 **Mouse Properties** window on a teal desktop, with beveled buttons, etched group boxes, a pixel font and a pixel-art mouse. Your PC will feel like it's 1995 again, just with a 26,000 DPI sensor.
 
