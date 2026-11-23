@@ -73,6 +73,19 @@ WebHID won't work inside a sandboxed iframe or a claude.ai artifact; the file ha
 - **Size:** the whole interface is drawn at 80% (`html{--zoom:.8;zoom:var(--zoom)}`), because the owner found 100% too big and liked the browser at 80%. Change `--zoom` to resize everything. `Open WMO.cmd` opens a 1100×900 window to suit. Anything that mixes pointer positions with layout sizes has to allow for the scale; the Test tab's canvas does (`f` in `drawStrokes`).
 - **No pop-ups:** profile rename and the factory-reset confirmation are inline.
 
+## Classic mode (the original Microsoft WMO 1.1)
+
+Added 2026-11-23. The **Mouse** box at the top switches between the PAW3395 mouse (default) and **Original Microsoft WMO 1.1**. The original is a wired, low-speed USB mouse (`045e:0040` Wheel Mouse Optical; `045e:0039` / `045e:0029` IntelliMouse Optical) with a fixed 400 DPI sensor and **no settings channel**, so classic mode never sends anything to a mouse.
+
+- **How it hides things:** `body.classic` is toggled; elements marked `clone-only` hide in classic mode and `classic-only` ones hide otherwise. Hidden in classic: profile picker, Connect/Disconnect, the WebHID banner, the Pointer, Buttons, Lighting, Power and Advanced tabs, the per-stage table, and the Apply/Undo buttons. Switching to classic closes an open PAW3395 connection; switching back tries the usual silent reconnect (`autoOpen`).
+- **Tabs in classic:** Overclock · Test · Sensitivity · Motion.
+  - **Overclock** (`#pane-oc`): model, target rate and OS (`segOcRate`, `segOcOs`), then generated steps (`winSteps()` / `linuxSteps()`). Windows uses SweetLow's hidusbf (patching driver; Memory Integrity off on Win 10/11 x64; SETUP.EXE → Install Service → Filter On Device → rate → Restart). Linux uses YeaSeb/wmo-oc-kmod: its `rate` parameter is the **interval in ms** (rate=1 is 1000 Hz), and anything over 255 is clamped to 255 ms, so the page always prints the interval. For a model other than `0040` it adds a `sed` line that changes `WMO_PID` in `wmo_oc.c`, flagged as untested. It also covers `usbhid.mousepoll` for EHCI ports.
+  - **Motion** (`#pane-motion`): fixed facts, then a Windows pointer-speed notch picker (`NOTCH` multipliers with Enhance pointer precision off: 1/32, 1/16, 1/4, 1/2, 3/4, 1, 1.5, 2, 2.5, 3, 3.5; Settings-app value = 2 × (notch − 1), notch 1 = 1), acceleration-off steps for Windows/GNOME/KDE, and remapping software names.
+  - **Test** and **Sensitivity** are shared. In classic, "Overclock target" replaces "Mouse is set to", debounce shows "fixed", the angle-snapping line has no setting, and `calcDpi()` returns 400 unless Custom is chosen.
+- **Left column in classic:** DPI 400, polling = the target, "Connection: USB wired", "Nothing to connect", and the USB ID.
+- **State:** `X` (localStorage `wmo11.jster.classic`): `{on, model, iv, os, notch}`. `iv` is the target as an interval in ms (8/4/2/1). Defaults: off, `0040`, 500 Hz, OS guessed from the user agent, notch 6.
+- **Not verified:** none of the classic steps were run on a real WMO 1.1. The hidusbf steps follow its README (checked 2026-11-23); wmo-oc-kmod was read but not built (no kernel headers in that session). The model list comes from usb.ids.
+
 ## Features and where they live
 
 | Feature | Tab | Notes |
@@ -115,6 +128,7 @@ Search for the comment banners.
   - `// ===== what gets sent =====`: `GROUPS`, `pending()`, `renderApply()`, `run`, `sendGroups`, factory reset.
   - `// ===== SENSITIVITY =====` (`GAMES`, `C`, `syncCalc`), then `// ---- cm/360 finder ----` (`P`, `padStart`, `padDraw`, `padFinish`).
   - `// ===== connect + status =====`: `pickInterface`, `openDev`, `onLive` / `listenLive`, `readStatus`.
+  - `// ===== CLASSIC =====`: `MODELS`, `NOTCH`, `winSteps`, `linuxSteps`, `buildClassic`, `syncClassic`, `setMode`, the Copy-button handler, `autoOpen`. (`X` itself is defined in the state section, because `calcDpi` and the Test tab read it.)
   - `// ===== boot =====`
 
 ### Browser storage (localStorage, per origin)
@@ -122,6 +136,7 @@ Search for the comment banners.
 - `wmo11.jster.v1`: `{cur, list:[5 × {name, s}]}`, where `s` is the settings object (`DEFAULT()` shape, including `snap`). Same key and shape as v1.
 - `wmo11.jster.onmouse`: `{sig, val}` per packet group: what the mouse last confirmed.
 - `wmo11.jster.live`: `{on}`, the instant-sending switch.
+- `wmo11.jster.classic`: classic mode `{on, model, iv, os, notch}` (see "Classic mode").
 - `wmo11.jster.calc`: calculator state `{game, yaw, src, dpi, sens, target, pad}`. `pad` holds the last finder result.
 
 `file://` and `http://127.0.0.1` are different origins, so settings made in one don't show in the other. Moving or renaming the HTML file can also start it with empty storage.

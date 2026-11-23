@@ -34,6 +34,19 @@ A classic mouse deserves a classic control panel. The whole thing is drawn as a 
 
 It also keeps more than one profile, shows battery, DPI and polling live, and notices when you press the DPI button on the mouse.
 
+### Got the original Microsoft WMO 1.1?
+
+Pick **Original Microsoft WMO 1.1** in the **Mouse** box at the top. The real WMO 1.1 (and the IntelliMouse Optical 1.1) has no settings memory, so nothing gets sent to it. Its 400 DPI is fixed, and its polling rate is decided by your PC. So this mode helps you set things up on the PC and then checks that they worked:
+
+| Tab | What's on it |
+|---|---|
+| **Overclock** | Pick a target (125, 250, 500 or 1000 Hz) and your system, and get the steps for that rate. Windows uses [hidusbf](https://github.com/LordOfMice/hidusbf); Linux uses [wmo-oc-kmod](https://github.com/YeaSeb/wmo-oc-kmod), with copy-ready commands. The module's `rate=` number is milliseconds, not Hz, so the page writes it out for you. |
+| **Test** | The polling checker compares what your mouse really does with your overclock target. The click checker catches worn, double-clicking switches. |
+| **Sensitivity** | The same calculator and cm/360 finder, set to 400 DPI. |
+| **Motion** | Works out what each Windows pointer-speed notch does at 400 DPI and shows where to turn off acceleration (Windows, GNOME and KDE). Also covers button remapping on the PC. |
+
+500 Hz is the usual safe pick. 1000 Hz works on many WMO 1.1s but not all, so check it on the Test tab. Both tools are third-party drivers that run with full access to your system: hidusbf needs Memory Integrity turned off on Windows 10/11, and wmo-oc-kmod is a kernel module you build yourself. Read what they do before you install them.
+
 ### Find your cm/360 by swiping your mousepad
 
 Click **Measure my mousepad...**, hold the left button and swipe from one edge of your pad to the other three times. It reads raw sensor counts, so Windows acceleration doesn't mess it up, then tells you a good cm/360 range for the space you have.
