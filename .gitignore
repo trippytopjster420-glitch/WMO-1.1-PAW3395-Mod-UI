@@ -1,0 +1,8 @@
+# Reverse-engineering notes: vendor disassembly and config files, kept local only
+re-notes/
+
+# Local tooling and machine-specific files
+.claude/
+*.lnk
+desktop.ini
+Thumbs.db
