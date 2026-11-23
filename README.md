@@ -58,6 +58,3 @@ I made this with an AI and a lot of vibes. The USB protocol was worked out by re
 Use it at your own risk. It's still less risky than the malware.
 
 Not affiliated with Microsoft or the mouse's maker. The Windows 95 look is based on [95CSS](https://github.com/YoshiMannaert/95CSS) (MIT, © 2025 Yoshi Mannaert), and the pixel font is W95FA by FontsArena.
-
-
-
