@@ -257,6 +257,17 @@ output{min-width:60px;text-align:right}
 .verdict{margin-top:8px}
 .verdict.ok{color:var(--green)}.verdict.off{color:var(--maroon)}
 
+/* ---------- classic mode: the original Microsoft WMO 1.1, which has no settings channel ---------- */
+body:not(.classic) .classic-only,body.classic .clone-only{display:none!important}
+body.classic #rdBatBox .bat{display:none}
+a{color:var(--blue)}
+.steps{margin:10px 0 0;padding-left:30px}
+.steps li{max-width:80ch;margin:0 0 12px}
+.cmd{display:flex;align-items:stretch;gap:6px;max-width:780px;margin:6px 0 0}
+.cmd code{flex:1;min-width:0;padding:8px 10px 6px;background:var(--white);box-shadow:var(--in4);font:15px/1.4 Fixedsys,"Courier New",monospace;white-space:pre-wrap;word-break:break-all}
+code.inl{padding:0 4px;background:var(--white);font:15px Fixedsys,"Courier New",monospace}
+.warnbox{max-width:80ch;margin-top:12px;padding:8px 10px;border:2px solid var(--black);background:var(--tip)}
+
 @media (max-width:900px){
   body{padding:6px}
   .app{grid-template-columns:1fr}
@@ -281,17 +292,24 @@ output{min-width:60px;text-align:right}
 
   <header class="top">
     <div class="prof">
+      <label for="modelSel">Mouse:</label>
+      <select id="modelSel" style="width:300px">
+        <option value="clone">WMO 1.1 PAW3395 (wireless)</option>
+        <option value="classic">Original Microsoft WMO 1.1</option>
+      </select>
+    </div>
+    <div class="prof clone-only">
       <label for="profSel">Profile:</label>
       <select id="profSel"></select>
       <input type="text" id="profName" maxlength="32" aria-label="Profile name" hidden>
       <button class="btn" id="profRename">Rename</button>
     </div>
     <span class="sp"></span>
-    <button class="btn" id="btnDisconnect" hidden>Disconnect</button>
-    <button class="btn primary" id="btnConnect">Connect mouse</button>
+    <button class="btn clone-only" id="btnDisconnect" hidden>Disconnect</button>
+    <button class="btn primary clone-only" id="btnConnect">Connect mouse</button>
   </header>
 
-  <div class="banner" id="support"></div>
+  <div class="banner clone-only" id="support"></div>
 
   <div class="app">
     <!-- the mouse itself on a black screen, with live status fields -->
@@ -305,7 +323,7 @@ output{min-width:60px;text-align:right}
       <div class="reads">
         <div class="read" id="rdDpiBox"><small>DPI</small><b id="rdDpi">-</b><span class="dots" id="rdDots"></span></div>
         <div class="read" id="rdPollBox"><small>Polling</small><b id="rdPoll">-</b><em>Hz</em></div>
-        <div class="read"><small>Battery</small><b id="battTxt">--</b><em id="battSub">%</em><span class="bat"><i id="battBar"></i></span></div>
+        <div class="read" id="rdBatBox"><small id="battLbl">Battery</small><b id="battTxt">--</b><em id="battSub">%</em><span class="bat"><i id="battBar"></i></span></div>
       </div>
       <div class="mathead">
         <span class="state" id="connState"><i></i><span id="connTxt">Not connected</span></span>
@@ -316,13 +334,15 @@ output{min-width:60px;text-align:right}
     <!-- the property sheet -->
     <div>
       <nav class="tabs" id="tabs" role="tablist" aria-label="Settings">
-        <button role="tab" data-tab="pointer" aria-selected="true">Pointer<i> *</i></button>
+        <button role="tab" data-tab="oc" class="classic-only" aria-selected="false">Overclock<i> *</i></button>
+        <button role="tab" data-tab="pointer" class="clone-only" aria-selected="true">Pointer<i> *</i></button>
         <button role="tab" data-tab="test" aria-selected="false">Test<i> *</i></button>
         <button role="tab" data-tab="sens" aria-selected="false">Sensitivity<i> *</i></button>
-        <button role="tab" data-tab="buttons" aria-selected="false">Buttons<i> *</i></button>
-        <button role="tab" data-tab="lighting" aria-selected="false">Lighting<i> *</i></button>
-        <button role="tab" data-tab="power" aria-selected="false">Power<i> *</i></button>
-        <button role="tab" data-tab="advanced" aria-selected="false">Advanced<i> *</i></button>
+        <button role="tab" data-tab="motion" class="classic-only" aria-selected="false">Motion<i> *</i></button>
+        <button role="tab" data-tab="buttons" class="clone-only" aria-selected="false">Buttons<i> *</i></button>
+        <button role="tab" data-tab="lighting" class="clone-only" aria-selected="false">Lighting<i> *</i></button>
+        <button role="tab" data-tab="power" class="clone-only" aria-selected="false">Power<i> *</i></button>
+        <button role="tab" data-tab="advanced" class="clone-only" aria-selected="false">Advanced<i> *</i></button>
       </nav>
       <div class="sheet">
 
@@ -395,20 +415,20 @@ output{min-width:60px;text-align:right}
               <label><span>&nbsp;</span><button class="btn" id="cUse" disabled>Use this sensitivity</button></label>
             </div>
           </fieldset>
-          <fieldset><legend>Every stage at this sensitivity</legend>
+          <fieldset class="clone-only"><legend>Every stage at this sensitivity</legend>
             <div class="ctabwrap"><table class="ctab"><thead><tr><th>Stage</th><th>DPI</th><th>eDPI</th><th>cm / <span class="turn">360</span>°</th><th>in / <span class="turn">360</span>°</th></tr></thead><tbody id="cTable"></tbody></table></div>
           </fieldset>
         </section>
 
         <section class="pane" id="pane-test">
-          <p class="lede">Check that a setting really does what it should. Change it on the Pointer tab, press Apply, then test here again and compare.</p>
+          <p class="lede"><span class="clone-only">Check that a setting really does what it should. Change it on the Pointer tab, press Apply, then test here again and compare.</span><span class="classic-only">Check that the overclock really took. Set it up on the Overclock tab, then test here and compare with the target.</span></p>
           <fieldset><legend>Polling rate</legend>
             <div class="tbox" id="tPoll">Move the mouse quickly in circles inside this box, for a few seconds</div>
             <div class="cout">
               <div class="res main"><small>Now</small><b id="tpNow">-</b><em> Hz</em></div>
               <div class="res"><small>Average</small><b id="tpAvg">-</b><em> Hz</em></div>
               <div class="res"><small>Highest</small><b id="tpMax">-</b><em> Hz</em></div>
-              <div class="res"><small>Mouse is set to</small><b id="tpSet">-</b><em> Hz</em></div>
+              <div class="res"><small><span class="clone-only">Mouse is set to</span><span class="classic-only">Overclock target</span></small><b id="tpSet">-</b><em> Hz</em></div>
             </div>
             <p class="note" id="tpNote"></p>
             <p class="mt"><button class="btn" id="tpReset">Start over</button></p>
@@ -419,17 +439,68 @@ output{min-width:60px;text-align:right}
               <div class="res"><small>Clicks</small><b id="tcN">0</b></div>
               <div class="res"><small>Shortest gap</small><b id="tcMin">-</b><em> ms</em></div>
               <div class="res main"><small>Bounced clicks</small><b id="tcSus">0</b></div>
-              <div class="res"><small>Debounce is set to</small><b id="tcSet">-</b><em> ms</em></div>
+              <div class="res"><small>Debounce<span class="clone-only"> is set to</span></small><b id="tcSet">-</b><em class="clone-only"> ms</em></div>
             </div>
             <p class="note" id="tcNote"></p>
             <p class="mt"><button class="btn" id="tcReset">Start over</button></p>
           </fieldset>
           <fieldset><legend>Angle snapping</legend>
-            <p>Hold the left button in the box and draw a slow line that tilts slightly, like a gentle ramp. Draw the same line with angle snapping off and again with it on. Snapping is set to <b id="tdSet">-</b>.</p>
+            <p>Hold the left button in the box and draw a slow line that tilts slightly, like a gentle ramp. <span class="clone-only">Draw the same line with angle snapping off and again with it on. Snapping is set to <b id="tdSet">-</b>.</span><span class="classic-only">The WMO 1.1 has no angle-snapping setting, so this shows how its sensor draws on its own.</span></p>
             <div class="tcwrap mt"><canvas id="tDraw" height="220"></canvas></div>
             <div class="ctabwrap mt"><table class="ctab"><thead><tr><th>Line</th><th>Length</th><th>Tilt</th><th>Wobble</th><th>Longest level stretch</th><th>Steps</th></tr></thead><tbody id="tdRows"></tbody></table></div>
             <p class="note">Without snapping, a tilted line climbs in many small steps and wobbles a little. If snapping works, the same stroke comes out level or nearly level: few or no steps, and a level stretch close to the whole length. Hand-drawn lines that are perfectly level every time mean snapping is active.</p>
             <p class="mt"><button class="btn" id="tdReset">Clear</button></p>
+          </fieldset>
+        </section>
+
+        <!-- classic mode: the original Microsoft WMO 1.1 -->
+        <section class="pane" id="pane-oc">
+          <p class="lede">The original WMO 1.1 has no settings memory and no setup channel, so there is nothing to send to it. Its polling rate is decided by the PC: the mouse asks to be read every 8 ms (125 Hz), and an overclock tells the PC's USB driver to read it more often. Nothing on the mouse changes, and undoing the overclock puts it straight back.</p>
+          <fieldset><legend>Your mouse</legend>
+            <div class="row"><div><b>Model</b><p>Not sure? Check its USB ID. Windows: Device Manager, Mice and other pointing devices, the mouse, Properties, Details, Hardware Ids (look for <code class="inl">VID_045E&amp;PID_…</code>). Linux: <code class="inl">lsusb | grep -i 045e</code></p></div><select id="ocModel" aria-label="Mouse model" style="width:380px"></select></div>
+            <div class="row"><div><b>Target polling rate</b><p id="ocRateHelp"></p></div><div class="seg" id="segOcRate"></div></div>
+            <div class="row"><div><b>Your system</b></div><div class="seg" id="segOcOs"></div></div>
+          </fieldset>
+          <fieldset id="ocWin"><legend>Windows: hidusbf</legend><div id="ocWinBody"></div></fieldset>
+          <fieldset id="ocLinux"><legend>Linux: wmo-oc-kmod</legend><div id="ocLinuxBody"></div></fieldset>
+          <fieldset><legend>Check it</legend>
+            <p>Open the Test tab and move the mouse quickly in circles for a few seconds. <b>Highest</b> should come close to the target. If it stays near 125 Hz, the overclock isn't active. If it lands in between, or the pointer stutters, this mouse can't hold that rate: pick one step lower and test again.</p>
+            <p class="mt"><button class="btn" id="ocTest">Go to the Test tab</button></p>
+          </fieldset>
+        </section>
+
+        <section class="pane" id="pane-motion">
+          <p class="lede">The sensor runs at one fixed speed, 400 DPI, and the mouse can't store anything. Everything else about how it feels is set on the PC. This tab works out the numbers and shows where to set them; it doesn't change anything by itself.</p>
+          <fieldset><legend>The mouse</legend>
+            <div class="cout" style="margin-top:0">
+              <div class="res"><small>DPI</small><b>400</b><em> fixed</em></div>
+              <div class="res"><small>Stock polling</small><b>125</b><em> Hz</em></div>
+              <div class="res"><small>Buttons</small><b id="mvBtns">3</b><em id="mvBtnsSub" style="display:block"></em></div>
+              <div class="res"><small>USB ID</small><b id="mvId" style="font-size:22px">-</b></div>
+            </div>
+          </fieldset>
+          <fieldset><legend>Pointer speed in Windows</legend>
+            <div class="row" style="padding-top:0"><div><b>Pointer speed notch</b><p>The 11-notch slider in Mouse Properties, Pointer Options, counted from the left.</p></div><div class="seg" id="segNotch"></div></div>
+            <div class="cout">
+              <div class="res main"><small>Multiplier</small><b id="mvMult">-</b></div>
+              <div class="res"><small>Desktop speed</small><b id="mvDesk">-</b><em> DPI</em></div>
+              <div class="res"><small>Settings app slider</small><b id="mvApp">-</b><em> of 20</em></div>
+            </div>
+            <p class="note" id="mvNote"></p>
+            <ol class="steps mt">
+              <li>Open Settings, Bluetooth &amp; devices, Mouse, then <b>Additional mouse settings</b>.</li>
+              <li>On <b>Pointer Options</b>, set the speed slider to notch <b id="mvNotch">6</b> and untick <b>Enhance pointer precision</b>. That tick box is Windows' acceleration: with it on, the same hand movement goes a different distance depending on how fast you move.</li>
+              <li>Press OK. Games that read raw input, which is most shooters, ignore both settings. They change the desktop and games that use the Windows pointer.</li>
+            </ol>
+          </fieldset>
+          <fieldset><legend>Pointer speed on Linux</legend>
+            <p>Turn acceleration off so the pointer goes the same distance however fast you move. GNOME: Settings, Mouse &amp; Touchpad, turn off Mouse Acceleration, or run:</p>
+            <div class="cmd"><code>gsettings set org.gnome.desktop.peripherals.mouse accel-profile 'flat'</code><button class="btn sm" type="button" data-copy>Copy</button></div>
+            <p class="mt">KDE Plasma: System Settings, Mouse, turn pointer acceleration off (the flat profile).</p>
+          </fieldset>
+          <fieldset><legend>Buttons and clicks</legend>
+            <p>The mouse can't store a remap, so remapping is done by software on the PC: X-Mouse Button Control on Windows, or input-remapper on Linux.</p>
+            <p class="mt">An old WMO 1.1 can start double-clicking as its switches wear. It has no debounce setting, so the fix is cleaning or replacing the switch. The Test tab's click check shows whether it's happening.</p>
           </fieldset>
         </section>
 
@@ -460,8 +531,8 @@ output{min-width:60px;text-align:right}
 
   <footer class="apply">
     <span class="ast" id="applyTxt" role="status"></span>
-    <button class="btn" id="btnRevert" hidden>Undo changes</button>
-    <button class="btn primary" id="btnApply" disabled>Apply to mouse</button>
+    <button class="btn clone-only" id="btnRevert" hidden>Undo changes</button>
+    <button class="btn primary clone-only" id="btnApply" disabled>Apply to mouse</button>
   </footer>
 </div>
 
@@ -582,6 +653,22 @@ output{min-width:60px;text-align:right}
   const saveM = () => lsSet(MKEY, M);
   // changed("light") / changed("dpi") also queues that group for instant sending (see liveKick)
   const changed = (live, force) => { save(); if (live) liveKick(live); syncAll(force); };
+  // Classic mode is for the original Microsoft WMO 1.1 (wired, 400 DPI, no settings channel). Nothing is sent to it;
+  // X holds the page's own choices: which model, the overclock target (as a USB interval in ms), the OS, the pointer notch.
+  const XKEY = "wmo11.jster.classic";
+  const MODELS = [
+    { id: "0040", name: "Wheel Mouse Optical 1.1 / 1.1a", btns: 3, sub: "left, right, wheel" },
+    { id: "0039", name: "IntelliMouse Optical 1.1", btns: 5, sub: "plus 2 side buttons" },
+    { id: "0029", name: "IntelliMouse Optical (older ID)", btns: 5, sub: "plus 2 side buttons" }
+  ];
+  const guessOs = () => /Linux|X11|CrOS/.test(navigator.userAgent) && !/Android/.test(navigator.userAgent) ? "linux" : "win";
+  const X = Object.assign({ on: false, model: "0040", iv: 2, os: guessOs(), notch: 6 }, lsGet(XKEY, {}));
+  if (!MODELS.some(m => m.id === X.model)) X.model = "0040";
+  if (![8, 4, 2, 1].includes(X.iv)) X.iv = 2;
+  if (X.os !== "linux") X.os = "win";
+  if (!(X.notch >= 1 && X.notch <= 11)) X.notch = 6;
+  const saveX = () => lsSet(XKEY, X);
+  const model = () => MODELS.find(m => m.id === X.model);
 
   function renderProfiles() {
     const sel = $("profSel"); sel.innerHTML = "";
@@ -837,6 +924,12 @@ output{min-width:60px;text-align:right}
   let noteMsg = "", noteCls = "";
   function note(msg, cls) { noteMsg = msg; noteCls = cls || ""; }
   function renderApply() {
+    if (X.on) {
+      document.querySelectorAll("#tabs button").forEach(b => b.classList.remove("dirty"));
+      $("applyTxt").className = "ast";
+      $("applyTxt").textContent = "Classic mode: the original WMO 1.1 has no settings memory, so nothing here is sent to it. The overclock is set up on the PC; see the Overclock tab.";
+      renderMat([]); return;
+    }
     const pend = pending(), errs = pend.filter(p => p.err), el = $("applyTxt");
     const names = pend.map(p => p.g.name).join(", "), fresh = !Object.keys(M.sig).length;
     // a tab gets a dot when it holds a change from what the mouse was last given (not on a first run, when everything is new)
@@ -942,7 +1035,7 @@ output{min-width:60px;text-align:right}
   const tf = () => C.turn / 360, unit = () => "cm/" + C.turn;
   const cm360 = (dpi, sens, yaw) => dpi > 0 && sens > 0 && yaw > 0 ? 914.4 / (dpi * sens * yaw) : NaN; // 360 deg * 2.54 cm
   const fmt = (v, d) => isFinite(v) ? (+v.toFixed(d)).toLocaleString(undefined, { maximumFractionDigits: d }) : "-";
-  const calcDpi = () => C.src === "custom" ? +C.dpi : C.src === "active" ? S.dpi[S.dpiActive - 1] : S.dpi[+C.src];
+  const calcDpi = () => C.src === "custom" ? +C.dpi : X.on ? 400 : C.src === "active" ? S.dpi[S.dpiActive - 1] : S.dpi[+C.src];
   function feel(cm) {
     if (!isFinite(cm)) return ["-", ""];
     if (cm < 18) return ["Very fast", "mostly wrist aiming"];
@@ -966,8 +1059,8 @@ output{min-width:60px;text-align:right}
     $("cUse").onclick = () => { const v = +$("cNeed").value; if (v > 0) { C.sens = v; saveCalc(); syncCalc(true); } };
   }
   function syncCalc(force) {
-    const opts = [["active", `Stage in use (${S.dpi[S.dpiActive - 1]})`]];
-    for (let i = 0; i < S.dpiCount; i++) opts.push([String(i), `Stage ${i + 1} (${S.dpi[i]})`]);
+    const opts = X.on ? [["active", "WMO 1.1 (400)"]] : [["active", `Stage in use (${S.dpi[S.dpiActive - 1]})`]];
+    if (!X.on) for (let i = 0; i < S.dpiCount; i++) opts.push([String(i), `Stage ${i + 1} (${S.dpi[i]})`]);
     opts.push(["custom", "Custom"]);
     if (!opts.some(o => o[0] === C.src)) C.src = "active";
     const act = document.activeElement;
@@ -1186,8 +1279,9 @@ output{min-width:60px;text-align:right}
     $("tpMax").textContent = TP.max ? Math.round(TP.max) : "-";
     const set = +$("tpSet").textContent, near = RATES.reduce((a, b) => Math.abs(b - TP.max) < Math.abs(a - TP.max) ? b : a);
     $("tpNote").textContent = TP.n < 4 ? "A mouse only reports while it moves, so keep the movement fast and continuous."
-      : Math.abs(TP.max - set) <= set * 0.2 ? "The mouse is reporting at about its " + set + " Hz setting."
-      : "The closest standard rate to what was measured is " + near + " Hz, but the mouse is set to " + set + " Hz. Keep moving fast for a few more seconds. If it stays like this, the setting isn't taking effect.";
+      : Math.abs(TP.max - set) <= set * 0.2 ? (X.on ? "The mouse is reporting at about its " + set + " Hz target." + (set > 125 ? " The overclock is working." : "") : "The mouse is reporting at about its " + set + " Hz setting.")
+      : "The closest standard rate to what was measured is " + near + " Hz, but " + (X.on ? "the overclock target is " : "the mouse is set to ") + set + " Hz. Keep moving fast for a few more seconds. " +
+        (X.on ? "If it stays like this, the overclock isn't active or this mouse can't hold that rate: see the Overclock tab." : "If it stays like this, the setting isn't taking effect.");
   }
   setInterval(() => {
     if (tab !== "test") return;
@@ -1211,8 +1305,9 @@ output{min-width:60px;text-align:right}
     $("tcN").textContent = TC.n;
     $("tcMin").textContent = isFinite(TC.min) ? Math.round(TC.min) : "-";
     $("tcSus").textContent = TC.sus;
-    $("tcNote").textContent = TC.sus ? TC.sus + " press" + (TC.sus > 1 ? "es" : "") + " arrived less than " + BOUNCE_MS + " ms after the one before, which is faster than a finger can click. That is switch bounce: raise Click debounce on the Pointer tab, Apply, and test again."
-      : TC.n >= 20 ? "No bounce in " + TC.n + " clicks. The debounce setting is high enough; you could try a lower one and test again."
+    $("tcNote").textContent = TC.sus ? TC.sus + " press" + (TC.sus > 1 ? "es" : "") + " arrived less than " + BOUNCE_MS + " ms after the one before, which is faster than a finger can click. That is switch bounce: " +
+        (X.on ? "the WMO 1.1 has no debounce setting, so the fix is cleaning or replacing that switch." : "raise Click debounce on the Pointer tab, Apply, and test again.")
+      : TC.n >= 20 ? "No bounce in " + TC.n + " clicks. " + (X.on ? "The switches are fine." : "The debounce setting is high enough; you could try a lower one and test again.")
       : "Make at least 20 single clicks. A bounced click is one press that registers twice, only a few milliseconds apart.";
   }
   const tclick = $("tClick");
@@ -1282,6 +1377,15 @@ output{min-width:60px;text-align:right}
   // The left column shows the real mouse: for each readout, what the mouse last confirmed (or reported itself).
   // Unsent edits don't change it; they only add a mark. Before anything has been confirmed it can only show the profile.
   function renderMat(pend) {
+    if (X.on) {
+      ["rdDpiBox", "rdPollBox"].forEach(id => $(id).classList.remove("wait", "pend"));
+      $("rdDpi").textContent = "400"; $("rdDots").innerHTML = ""; $("rdDpiBox").style.setProperty("--stage", "transparent");
+      $("rdDpiBox").title = "The WMO 1.1's sensor runs at a fixed 400 DPI.";
+      $("rdPoll").textContent = $("tpSet").textContent = 1000 / X.iv;
+      $("rdPollBox").title = "Your overclock target. The Test tab measures what the mouse really does.";
+      $("tcSet").textContent = "fixed";
+      return;
+    }
     const has = id => pend.some(p => p.g.id === id);
     const mark = (box, id) => {
       const p = has(id), known = !!M.val[id];
@@ -1302,7 +1406,7 @@ output{min-width:60px;text-align:right}
     $("tdSet").textContent = onMouse("lod").snap ? "on" : "off";
   }
   function syncAll(force) {
-    syncButtons(); syncPointer(force); syncLighting(force); syncPower(); syncCalc(force); renderApply();
+    syncButtons(); syncPointer(force); syncLighting(force); syncPower(); syncCalc(force); syncClassic(); renderApply();
   }
 
   // ================= connect + status =================
@@ -1326,7 +1430,7 @@ output{min-width:60px;text-align:right}
   // The mouse reports on-device changes (DPI button, polling-rate switch) as input report 5:
   // [5] 06 ?? <poll interval 8/4/2/1> <DPI stage 1-6>. WebHID drops the report ID byte.
   function onLive(e) {
-    if (e.reportId !== 5 || e.data.byteLength < 4 || e.data.getUint8(0) !== 6) return;
+    if (X.on || e.reportId !== 5 || e.data.byteLength < 4 || e.data.getUint8(0) !== 6) return;
     const poll = e.data.getUint8(2), stage = e.data.getUint8(3);
     // The mouse itself changed something, so both the profile and the record of what's on the mouse follow it.
     // If the group had unsent edits, only the reported value is updated in the record and the edits stay pending.
@@ -1416,18 +1520,132 @@ output{min-width:60px;text-align:right}
   $("btnRawRead").onclick = () => run(async () => { await sendRaw(parseRaw()); await readReply(false); });
   $("btnClear").onclick = () => $("log").innerHTML = "";
 
+  // ================= CLASSIC: the original Microsoft WMO 1.1 =================
+  // Its polling rate is set by the PC's USB driver (the endpoint's bInterval), so this mode only explains and checks.
+  const esc = t => String(t).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  const cmd = t => `<div class="cmd"><code>${esc(t)}</code><button class="btn sm" type="button" data-copy>Copy</button></div>`;
+  const NOTCH = [1 / 32, 1 / 16, 1 / 4, 1 / 2, 3 / 4, 1, 1.5, 2, 2.5, 3, 3.5];   // Windows pointer speed, Enhance pointer precision off
+  const NOTCH_TXT = ["1/32", "1/16", "1/4", "1/2", "3/4", "1", "1.5", "2", "2.5", "3", "3.5"];
+  const RATE_HELP = {
+    8: "125 Hz is how the mouse ships. Pick it to see how to undo an overclock.",
+    4: "A mild step up from stock.",
+    2: "The usual pick: most WMO 1.1s are reported to hold 500 Hz.",
+    1: "Works on many WMO 1.1s but not all. If the Test tab shows it falling short, or the pointer stutters, go back to 500 Hz."
+  };
+  function winSteps() {
+    const hz = 1000 / X.iv;
+    if (X.iv === 8) return `<p>125 Hz is stock, so there is nothing to install. If you overclocked the mouse before: run hidusbf's <b>SETUP.EXE</b>, untick <b>Filter On Device</b> on the mouse's row and press <b>Restart</b>.</p>`;
+    return `<p>hidusbf is a free filter driver by SweetLow that changes the polling rate of the USB devices you pick and leaves the rest alone. A driver has full access to Windows, so get it from its own page and nowhere else.</p>
+      <ol class="steps">
+        <li>Download it from <a href="https://github.com/LordOfMice/hidusbf" target="_blank" rel="noopener">github.com/LordOfMice/hidusbf</a> and unzip <b>hidusbf.zip</b>. Use the driver files as they come, not the ones in a <b>NOPATCH</b> folder: the WMO 1.1 is a low-speed USB device, and Windows only lets those go above 125 Hz with the patching driver.</li>
+        <li>On 64-bit Windows 10 or 11, turn off <b>Memory Integrity</b> (Windows Security, Device security, Core isolation details) and restart, or the patching driver won't load. This lowers Windows' protection against bad drivers, and some anti-cheat software checks for it, so decide whether the trade is worth it.</li>
+        <li>Run <b>SETUP.EXE</b> from the unzipped folder and press <b>Install Service</b>. It can flash by too fast to see; that's normal.</li>
+        <li>Find your mouse's row (press <b>All</b> if it isn't listed). Tick <b>Filter On Device</b> and check that the Filter? column says Yes.</li>
+        <li>Pick <b>${hz} Hz</b> as the rate, then press <b>Restart</b>. If the rate doesn't change, unplug the mouse and plug it back in, or reboot.</li>
+      </ol>
+      <div class="warnbox"><b>Stuck at 125 Hz?</b> Try 62 Hz as a test. If that works, the driver is running but can't patch this PC's USB driver (hidusbf can lag behind new Windows updates), or this port's USB controller isn't supported. Try another port, ideally on the back of the PC rather than the front panel or a hub.</div>
+      <p class="mt"><b>To undo it:</b> in SETUP.EXE untick Filter On Device and press Restart. To remove hidusbf completely, untick the filter <b>first</b>, then right-click Install Service and choose Uninstall Service. If the driver is deleted while the mouse still uses it, the mouse stops working until you remove it in Device Manager and scan for hardware changes.</p>`;
+  }
+  function linuxSteps() {
+    const n = X.iv, hz = 1000 / n, m = model();
+    if (n === 8) return `<p>125 Hz is stock. If the module is loaded, unloading it puts the mouse back:</p>${cmd("sudo rmmod wmo_oc")}
+      <p class="mt">If you used <code class="inl">usbhid.mousepoll</code> instead, set it back to 0 and replug the mouse:</p>${cmd("echo 0 | sudo tee /sys/module/usbhid/parameters/mousepoll")}`;
+    const typo = Math.min(hz, 255);
+    return `<p><a href="https://github.com/YeaSeb/wmo-oc-kmod" target="_blank" rel="noopener">wmo-oc-kmod</a> is a small third-party kernel module (by YeaSeb, last updated 2022). When the mouse is plugged in, it changes the interval the mouse asks for and resets the mouse so the USB controller uses it. It's made for USB 3 (xHCI) ports. It runs inside the kernel, so read <b>wmo_oc.c</b> (about 150 lines) before loading it.</p>
+      <ol class="steps">
+        <li>Install the build tools and your kernel's headers. Debian or Ubuntu:${cmd("sudo apt install build-essential linux-headers-$(uname -r) git")}Fedora:${cmd("sudo dnf install gcc make git kernel-devel")}Arch:${cmd("sudo pacman -S --needed base-devel linux-headers git")}</li>
+        <li>Get the code:${cmd("git clone https://github.com/YeaSeb/wmo-oc-kmod && cd wmo-oc-kmod")}</li>
+        ${m.id !== "0040" ? `<li>The module only looks for 045e:0040. Point it at your mouse's ID (045e:${m.id}):${cmd(`sed -i 's/WMO_PID 0x0040/WMO_PID 0x${m.id}/' wmo_oc.c`)}It was written for the Wheel Mouse Optical, so on this model it's untested.</li>` : ""}
+        <li>Build it:${cmd("make")}</li>
+        <li>Load it at ${hz} Hz:${cmd(`sudo insmod wmo_oc.ko rate=${n}`)}<b>rate is the gap between reports in milliseconds, not Hz.</b> rate=${n} means ${hz} Hz. Typing rate=${hz} would mean one report every ${typo} ms${hz > 255 ? " (the module caps it there)" : ""}: about ${Math.round(1000 / typo)} Hz.</li>
+        <li>Check that it worked:${cmd("sudo dmesg | grep wmo_oc")}It should say the bInterval value of endpoint 0x81 was set to ${n}.</li>
+      </ol>
+      <p><b>Change the rate</b> while it's loaded:</p>${cmd(`echo ${n} | sudo tee /sys/module/wmo_oc/parameters/rate`)}
+      <p class="mt"><b>To undo it</b> (back to 125 Hz):</p>${cmd("sudo rmmod wmo_oc")}
+      <div class="warnbox"><b>insmod says "Key was rejected by service"?</b> Secure Boot only loads signed modules. Sign it with your distro's MOK tools, or turn Secure Boot off.</div>
+      <p class="mt"><b>After a reboot</b> the module is gone, so run the insmod line again. On Arch, <b>packaging/arch</b> has a DKMS package that rebuilds the module on kernel updates and loads it at boot; set your rate for it with:</p>${cmd(`echo "options wmo_oc rate=${n}" | sudo tee /etc/modprobe.d/wmo-oc.conf`)}
+      <p class="mt">On other distros it has to be rebuilt after every kernel update.</p>
+      <p class="mt"><b>Older PC with USB 2 ports?</b> On an EHCI controller the kernel's own setting is enough, with no module:</p>${cmd(`echo ${n} | sudo tee /sys/module/usbhid/parameters/mousepoll`)}
+      <p class="mt">Then unplug the mouse and plug it back in. On USB 3 (xHCI) ports this usually has no effect, which is why the module exists.</p>`;
+  }
+  function buildClassic() {
+    $("ocModel").innerHTML = MODELS.map(m => `<option value="${m.id}">${m.name} (045e:${m.id})</option>`).join("");
+    $("ocModel").onchange = () => { X.model = $("ocModel").value; saveX(); syncAll(); };
+    const setX = (k) => v => { X[k] = v; saveX(); };
+    seg($("segOcRate"), [["125 Hz (stock)", 8], ["250 Hz", 4], ["500 Hz", 2], ["1000 Hz", 1]], () => X.iv, setX("iv"));
+    seg($("segOcOs"), [["Windows", "win"], ["Linux", "linux"]], () => X.os, setX("os"));
+    seg($("segNotch"), NOTCH.map((_, i) => [i + 1, i + 1]), () => X.notch, setX("notch"));
+    $("ocTest").onclick = () => showTab("test");
+    $("modelSel").onchange = () => setMode($("modelSel").value === "classic");
+  }
+  function syncClassic() {
+    const m = model(), k = X.notch - 1, mult = NOTCH[k];
+    $("modelSel").value = X.on ? "classic" : "clone";
+    $("ocModel").value = X.model;
+    ["segOcRate", "segOcOs", "segNotch"].forEach(id => $(id)._sync());
+    $("ocRateHelp").textContent = RATE_HELP[X.iv];
+    $("ocWin").hidden = X.os !== "win"; $("ocLinux").hidden = X.os !== "linux";
+    const sig = [X.iv, X.os, X.model].join();   // rebuilt only when it changes, so a Copy button's "Copied" isn't wiped
+    if ($("ocWinBody").dataset.sig !== sig) { $("ocWinBody").dataset.sig = sig; $("ocWinBody").innerHTML = winSteps(); $("ocLinuxBody").innerHTML = linuxSteps(); }
+    $("mvBtns").textContent = m.btns; $("mvBtnsSub").textContent = m.sub; $("mvId").textContent = "045e:" + m.id;
+    $("mvMult").textContent = "×" + NOTCH_TXT[k];
+    $("mvDesk").textContent = fmt(400 * mult, 1);
+    $("mvApp").textContent = X.notch === 1 ? 1 : 2 * (X.notch - 1);
+    $("mvNotch").textContent = X.notch;
+    $("mvNote").textContent = X.notch === 6 ? "Notch 6 is 1:1: each count from the sensor moves the pointer one pixel. It's the usual choice."
+      : X.notch > 6 ? `Windows multiplies every count by ${NOTCH_TXT[k]}, so the pointer moves about ${NOTCH_TXT[k]} pixels per count and skips the pixels in between. Faster on the desktop, less precise.`
+      : `Windows scales every count down to ${NOTCH_TXT[k]}, so the pointer moves slower than the sensor reads and you need more hand movement for the same distance.`;
+    if (X.on) $("sbSensor").textContent = "USB 045e:" + m.id;
+  }
+  // switching mice: the PAW3395 connection is closed in classic mode, and the left column shows the classic mouse
+  async function setMode(on) {
+    if (on && dev) { try { await dev.close(); } catch (e) {} dropped("Not connected"); log("Disconnected: switched to the original WMO 1.1."); }
+    X.on = on; saveX();
+    document.body.classList.toggle("classic", on);
+    if (on) {
+      $("battLbl").textContent = "Connection"; $("battTxt").textContent = "USB"; $("battSub").textContent = "wired";
+      setConn("Nothing to connect", "");
+    } else {
+      $("battLbl").textContent = "Battery";
+      dropped("Not connected");
+      autoOpen();
+    }
+    const b = document.querySelector(`#tabs button[data-tab="${tab}"]`);
+    if (!b || b.classList.contains(on ? "clone-only" : "classic-only")) showTab(on ? "oc" : "pointer");
+    syncAll(true); pollDraw(0); clickDraw();
+  }
+  // a Copy button copies the command next to it
+  document.addEventListener("click", e => {
+    const b = e.target.closest("[data-copy]"); if (!b) return;
+    const code = b.parentNode.querySelector("code"), t = code.textContent;
+    const done = ok => { b.textContent = ok ? "Copied" : "Press Ctrl+C"; setTimeout(() => { b.textContent = "Copy"; }, 1500); };
+    const fallback = () => {
+      const r = document.createRange(); r.selectNodeContents(code);
+      const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r);
+      let ok = false; try { ok = document.execCommand("copy"); } catch (err) {}
+      done(ok);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(() => done(true), fallback);
+    else fallback();
+  });
+  function autoOpen() {
+    if (X.on || !("hid" in navigator)) return;
+    navigator.hid.getDevices().then(l => { const d = pickInterface(l); if (d && !dev) openDev(d).then(() => run(() => readStatus(false))).catch(() => {}); }).catch(() => {});
+  }
+
   // ================= boot =================
   renderProfiles();
-  buildButtons(); buildPointer(); buildLighting(); buildPower(); buildCalc();
+  buildButtons(); buildPointer(); buildLighting(); buildPower(); buildCalc(); buildClassic();
   syncAll(true); syncLive(); pollDraw(0); clickDraw(); strokeRows();
   setActs(false);
+  if (X.on) setMode(true);
 
   if (!("hid" in navigator)) {
     $("support").innerHTML = "<b>This browser can't reach the mouse.</b> Open the app with <b>Open WMO.cmd</b>, or open this file in Edge or Chrome. You can still look around and set up profiles here.";
     $("btnConnect").disabled = true;
   } else {
     navigator.hid.addEventListener("disconnect", e => { if (dev && e.device === dev) { dropped("Unplugged", "bad"); log("Mouse unplugged.", "warn"); } });
-    navigator.hid.getDevices().then(l => { const d = pickInterface(l); if (d) openDev(d).then(() => run(() => readStatus(false))).catch(() => {}); });
+    autoOpen();
   }
   log("Ready. Close the original mouse software if it's running, then connect.");
 })();
