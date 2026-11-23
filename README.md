@@ -2,7 +2,7 @@
 
 **A Windows 95–style settings app for the white WMO 1.1 / IntelliMouse-shaped wireless mouse with the PAW3395 sensor.**
 
-I bought this mouse on AliExpress and it's been my favorite mouse in a long time. The classic shape with a modern sensor is great. The software it came with was not great. It was a mystery Chinese `.exe` that VirusTotal flagged as malware. A bonus remote-access trojan with every mouse is a little too generous, so I never ran it and built this instead.
+I bought this mouse on AliExpress and it's been my favorite mouse in a long time. The classic shape with a modern sensor is great. The software it came with was not great. It was a mystery Chinese `.exe` that VirusTotal flagged as malware. Free malware with every mouse is a little too generous, so I never ran it and built this instead.
 
 It's a single HTML file. No installer, no `.exe`, and nothing phones home. You can read every line of it.
 
