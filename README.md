@@ -1,4 +1,4 @@
-# WMO 1.1 Jster Mod 🖱️
+# WMO 1.1 Jster Mod
 
 **A Windows 95–style settings app for the white WMO 1.1 / IntelliMouse-shaped wireless mouse with the PAW3395 sensor.**
 
@@ -66,8 +66,8 @@ It works offline. Just download the repo and open the file.
 
 ## ⚠️ Disclaimer: this is vibe coded
 
-I made this with an AI and a lot of vibes. The USB protocol was worked out by reading the original program's code, without ever running it, then tested on my own mouse. So far the status readout and polling rate are confirmed working on real hardware. The other settings are built from that reverse engineering but haven't all been checked on the mouse yet. If something goes weird, **Advanced → Restore factory defaults** is there for you.
+I made this with an Claude (Fable 5.2). The USB protocol was worked out by reading the original program's code, without ever running it, then tested on my own mouse. So far the status readout and polling rate are confirmed working on real hardware. The other settings are built from that reverse engineering but haven't all been checked on the mouse yet. If something goes weird, **Advanced → Restore factory defaults** is there for you.
 
 Use it at your own risk. It's still less risky than the malware.
 
-Not affiliated with Microsoft or the mouse's maker. The Windows 95 look is based on [95CSS](https://github.com/YoshiMannaert/95CSS) (MIT, © 2025 Yoshi Mannaert), and the pixel font is W95FA by FontsArena.
+Not affiliated with Microsoft or the mouse's maker. The Windows 95 look is based on [95CSS](https://github.com/YoshiMannaert/95CSS) (MIT, © 2025 Yoshi Mannaert), and the pixel font is W95FA by FontsArena. I'm also looking for a Pixel art artist to reaplce this Shitty ai Render of my mouse, Contact me at Trippytopkek420@gmail.com  
